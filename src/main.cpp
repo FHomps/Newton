@@ -144,7 +144,6 @@ int main() {
         glfwPollEvents();
 
         limiter.update();
-        std::cout << limiter.getFPS() << std::endl;
     }
 
     glfwTerminate();
