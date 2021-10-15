@@ -44,16 +44,16 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     auto d = getSharedData(window);
     
-    double zoom = yoffset / 30.0;
+    double zoom = -yoffset / 15.0;
     d->origin = d->origin + zoom * (d->origin - getCursorGraphCoords(window));
-    glUniform1f(d->loc_scale, d->scale = d->scale * (1 + zoom));
-    glUniform2f(d->loc_origin, d->origin.x, d->origin.y);
+    glUniform1d(d->loc_scale, d->scale = d->scale * (1 + zoom));
+    glUniform2d(d->loc_origin, d->origin.x, d->origin.y);
 }
 
 int main() {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     SharedData d;
@@ -116,10 +116,10 @@ int main() {
     glUniform2i(d.loc_viewport, d.viewport.x, d.viewport.y);
 
     d.loc_scale = glGetUniformLocation(shaderProgram.ID, "scale");
-    glUniform1f(d.loc_scale, d.scale);
+    glUniform1d(d.loc_scale, d.scale);
 
     d.loc_origin = glGetUniformLocation(shaderProgram.ID, "origin");
-    glUniform2f(d.loc_origin, d.origin.x, d.origin.y);
+    glUniform2d(d.loc_origin, d.origin.x, d.origin.y);
 
     glfwSetWindowUserPointer(window, (void*)&d);
 
@@ -144,6 +144,7 @@ int main() {
         glfwPollEvents();
 
         limiter.update();
+        std::cout << limiter.getFPS() << std::endl;
     }
 
     glfwTerminate();
